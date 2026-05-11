@@ -1,0 +1,110 @@
+{
+  "pairing": "PPO_PPO",
+  "n_sessions": 10,
+  "delta_mean": 0.11990460249462828,
+  "delta_std": 0.06536107648400896,
+  "delta_median": 0.11657856431056868,
+  "convergence_rate": 1.0,
+  "sessions": [
+    {
+      "session": 0,
+      "converged": true,
+      "n_steps": 65001,
+      "delta": 0.2509558823724141,
+      "final_prices": [
+        1.5439637349434117,
+        1.5439637349434117
+      ]
+    },
+    {
+      "session": 1,
+      "converged": true,
+      "n_steps": 60001,
+      "delta": 0.1789308476791345,
+      "final_prices": [
+        1.505216239536435,
+        1.5439637349434117
+      ]
+    },
+    {
+      "session": 2,
+      "converged": true,
+      "n_steps": 80001,
+      "delta": 0.04130472999110833,
+      "final_prices": [
+        1.4664687441294584,
+        1.505216239536435
+      ]
+    },
+    {
+      "session": 3,
+      "converged": true,
+      "n_steps": 90001,
+      "delta": 0.04130472999110833,
+      "final_prices": [
+        1.505216239536435,
+        1.4664687441294584
+      ]
+    },
+    {
+      "session": 4,
+      "converged": true,
+      "n_steps": 80001,
+      "delta": 0.11657856431056868,
+      "final_prices": [
+        1.505216239536435,
+        1.505216239536435
+      ]
+    },
+    {
+      "session": 5,
+      "converged": true,
+      "n_steps": 75001,
+      "delta": 0.04130472999110833,
+      "final_prices": [
+        1.505216239536435,
+        1.4664687441294584
+      ]
+    },
+    {
+      "session": 6,
+      "converged": true,
+      "n_steps": 45001,
+      "delta": 0.1789308476791345,
+      "final_prices": [
+        1.5439637349434117,
+        1.505216239536435
+      ]
+    },
+    {
+      "session": 7,
+      "converged": true,
+      "n_steps": 75001,
+      "delta": 0.11657856431056868,
+      "final_prices": [
+        1.505216239536435,
+        1.505216239536435
+      ]
+    },
+    {
+      "session": 8,
+      "converged": true,
+      "n_steps": 70001,
+      "delta": 0.11657856431056868,
+      "final_prices": [
+        1.505216239536435,
+        1.505216239536435
+      ]
+    },
+    {
+      "session": 9,
+      "converged": true,
+      "n_steps": 85001,
+      "delta": 0.11657856431056868,
+      "final_prices": [
+        1.505216239536435,
+        1.505216239536435
+      ]
+    }
+  ]
+}

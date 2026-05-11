@@ -1,0 +1,20 @@
+Pairing:  Q_PPO
+Sessions: 10
+Budget:   {'max_steps': 500000, 'convergence_window': 30000, 'check_every': 5000}
+Nash:     1.473, Monopoly: 1.925
+
+  [  1/10] steps=500,000 delta=-0.102 prices=[1.428, 1.466] (42s elapsed)
+  [  2/10] steps=500,000 delta=+0.147 prices=[1.428, 1.544] (83s elapsed)
+  [  3/10] steps=500,000 delta=+0.086 prices=[1.428, 1.505] (125s elapsed)
+  [  4/10] steps=500,000 delta=+0.175 prices=[1.544, 1.544] (167s elapsed)
+  [  5/10] steps=500,000 delta=+0.094 prices=[1.466, 1.544] (209s elapsed)
+  [  6/10] steps=500,000 delta=+0.136 prices=[1.466, 1.544] (250s elapsed)
+  [  7/10] steps=500,000 delta=+0.117 prices=[1.505, 1.505] (292s elapsed)
+  [  8/10] steps=500,000 delta=+0.134 prices=[1.583, 1.466] (333s elapsed)
+  [  9/10] steps=500,000 delta=+0.094 prices=[1.466, 1.544] (375s elapsed)
+  [ 10/10] steps=500,000 delta=+0.251 prices=[1.544, 1.505] (416s elapsed)
+
+Mean Delta:  0.113 ± 0.085
+Median:      0.126
+Convergence: 0.0%
+Saved to:    results/Q_PPO.json

@@ -1,0 +1,20 @@
+Pairing:  PPO_PPO
+Sessions: 10
+Budget:   {'max_steps': 500000, 'convergence_window': 30000, 'check_every': 5000}
+Nash:     1.473, Monopoly: 1.925
+
+  [  1/10] steps= 65,001 delta=+0.251 prices=[1.544, 1.544] (11s elapsed)
+  [  2/10] steps= 60,001 delta=+0.179 prices=[1.505, 1.544] (20s elapsed)
+  [  3/10] steps= 80,001 delta=+0.041 prices=[1.466, 1.505] (32s elapsed)
+  [  4/10] steps= 90,001 delta=+0.041 prices=[1.505, 1.466] (46s elapsed)
+  [  5/10] steps= 80,001 delta=+0.117 prices=[1.505, 1.505] (59s elapsed)
+  [  6/10] steps= 75,001 delta=+0.041 prices=[1.505, 1.466] (70s elapsed)
+  [  7/10] steps= 45,001 delta=+0.179 prices=[1.544, 1.505] (77s elapsed)
+  [  8/10] steps= 75,001 delta=+0.117 prices=[1.505, 1.505] (89s elapsed)
+  [  9/10] steps= 70,001 delta=+0.117 prices=[1.505, 1.505] (100s elapsed)
+  [ 10/10] steps= 85,001 delta=+0.117 prices=[1.505, 1.505] (113s elapsed)
+
+Mean Delta:  0.120 ± 0.065
+Median:      0.117
+Convergence: 100.0%
+Saved to:    results/PPO_PPO.json

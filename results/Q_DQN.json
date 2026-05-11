@@ -1,0 +1,160 @@
+{
+  "pairing": "Q_DQN",
+  "n_sessions": 15,
+  "delta_mean": 0.36433408419410107,
+  "delta_std": 0.1927048101096429,
+  "delta_median": 0.38231481046210947,
+  "convergence_rate": 0.0,
+  "sessions": [
+    {
+      "session": 0,
+      "converged": false,
+      "n_steps": 500000,
+      "delta": 0.4762450144768773,
+      "final_prices": [
+        1.6602062211643416,
+        1.621458725757365
+      ]
+    },
+    {
+      "session": 1,
+      "converged": false,
+      "n_steps": 500000,
+      "delta": 0.6538147678537779,
+      "final_prices": [
+        1.6989537165713182,
+        1.6602062211643416
+      ]
+    },
+    {
+      "session": 2,
+      "converged": false,
+      "n_steps": 500000,
+      "delta": 0.7939631036807839,
+      "final_prices": [
+        1.7377012119782949,
+        1.7377012119782949
+      ]
+    },
+    {
+      "session": 3,
+      "converged": false,
+      "n_steps": 500000,
+      "delta": 0.38231481046210947,
+      "final_prices": [
+        1.621458725757365,
+        1.621458725757365
+      ]
+    },
+    {
+      "session": 4,
+      "converged": false,
+      "n_steps": 500000,
+      "delta": 0.47154580306693417,
+      "final_prices": [
+        1.505216239536435,
+        1.6602062211643416
+      ]
+    },
+    {
+      "session": 5,
+      "converged": false,
+      "n_steps": 500000,
+      "delta": 0.26699651423666537,
+      "final_prices": [
+        1.505216239536435,
+        1.621458725757365
+      ]
+    },
+    {
+      "session": 6,
+      "converged": false,
+      "n_steps": 500000,
+      "delta": 0.17867475602388558,
+      "final_prices": [
+        1.853943698199225,
+        1.4664687441294584
+      ]
+    },
+    {
+      "session": 7,
+      "converged": false,
+      "n_steps": 500000,
+      "delta": 0.22882545098707388,
+      "final_prices": [
+        1.505216239536435,
+        1.5827112303503883
+      ]
+    },
+    {
+      "session": 8,
+      "converged": false,
+      "n_steps": 500000,
+      "delta": 0.14934833230614783,
+      "final_prices": [
+        1.621458725757365,
+        1.4664687441294584
+      ]
+    },
+    {
+      "session": 9,
+      "converged": false,
+      "n_steps": 500000,
+      "delta": 0.5430450803328504,
+      "final_prices": [
+        1.7377012119782949,
+        1.6989537165713182
+      ]
+    },
+    {
+      "session": 10,
+      "converged": false,
+      "n_steps": 500000,
+      "delta": 0.15053481700784266,
+      "final_prices": [
+        1.6602062211643416,
+        1.4664687441294584
+      ]
+    },
+    {
+      "session": 11,
+      "converged": false,
+      "n_steps": 500000,
+      "delta": 0.3953745696758336,
+      "final_prices": [
+        1.5827112303503883,
+        1.621458725757365
+      ]
+    },
+    {
+      "session": 12,
+      "converged": false,
+      "n_steps": 500000,
+      "delta": 0.21894287156397008,
+      "final_prices": [
+        1.4277212487224817,
+        1.5439637349434117
+      ]
+    },
+    {
+      "session": 13,
+      "converged": false,
+      "n_steps": 500000,
+      "delta": 0.4208997079886071,
+      "final_prices": [
+        1.4664687441294584,
+        1.621458725757365
+      ]
+    },
+    {
+      "session": 14,
+      "converged": false,
+      "n_steps": 500000,
+      "delta": 0.1344856632481573,
+      "final_prices": [
+        1.5827112303503883,
+        1.4664687441294584
+      ]
+    }
+  ]
+}

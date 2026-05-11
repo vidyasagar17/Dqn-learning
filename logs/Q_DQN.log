@@ -1,0 +1,25 @@
+Pairing:  Q_DQN
+Sessions: 15
+Budget:   {'max_steps': 500000, 'convergence_window': 30000, 'check_every': 5000}
+Nash:     1.473, Monopoly: 1.925
+
+  [  1/15] steps=500,000 delta=+0.476 prices=[1.66, 1.621] (213s elapsed)
+  [  2/15] steps=500,000 delta=+0.654 prices=[1.699, 1.66] (431s elapsed)
+  [  3/15] steps=500,000 delta=+0.794 prices=[1.738, 1.738] (647s elapsed)
+  [  4/15] steps=500,000 delta=+0.382 prices=[1.621, 1.621] (850s elapsed)
+  [  5/15] steps=500,000 delta=+0.472 prices=[1.505, 1.66] (1065s elapsed)
+  [  6/15] steps=500,000 delta=+0.267 prices=[1.505, 1.621] (1269s elapsed)
+  [  7/15] steps=500,000 delta=+0.179 prices=[1.854, 1.466] (1475s elapsed)
+  [  8/15] steps=500,000 delta=+0.229 prices=[1.505, 1.583] (1678s elapsed)
+  [  9/15] steps=500,000 delta=+0.149 prices=[1.621, 1.466] (1883s elapsed)
+  [ 10/15] steps=500,000 delta=+0.543 prices=[1.738, 1.699] (2088s elapsed)
+  [ 11/15] steps=500,000 delta=+0.151 prices=[1.66, 1.466] (2292s elapsed)
+  [ 12/15] steps=500,000 delta=+0.395 prices=[1.583, 1.621] (2495s elapsed)
+  [ 13/15] steps=500,000 delta=+0.219 prices=[1.428, 1.544] (2710s elapsed)
+  [ 14/15] steps=500,000 delta=+0.421 prices=[1.466, 1.621] (2924s elapsed)
+  [ 15/15] steps=500,000 delta=+0.134 prices=[1.583, 1.466] (3150s elapsed)
+
+Mean Delta:  0.364 ± 0.193
+Median:      0.382
+Convergence: 0.0%
+Saved to:    results/Q_DQN.json

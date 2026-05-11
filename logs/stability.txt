@@ -1,0 +1,14 @@
+Pairing       N  strict_conv  mean_Delta  std_Delta  high_collude
+                 (225 state)                          (Delta>0.5)
+-----------------------------------------------------------------
+DQN_DQN      15          13%       0.569      0.203           60%
+PPO_PPO      10         100%       0.120      0.065            0%
+Q_DQN        15           0%       0.364      0.193           20%
+Q_PPO        10           0%       0.113      0.085            0%
+Q_Q          50          88%       0.842      0.124           96%
+
+Note: 'strict_conv' is the convergence rate under Calvano's exact
+criterion (greedy action unchanged in all 225 states for 30k+ steps).
+This test is not well-defined for neural-network agents because the
+network keeps drifting on never-visited states. 'high_collude' is a
+behavioral measure: fraction of sessions where final Delta > 0.5.
