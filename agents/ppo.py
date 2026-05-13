@@ -1,21 +1,4 @@
-"""
-Proximal Policy Optimization agent for the Calvano Bertrand environment.
-
-Key differences from Q-learning and DQN:
-  * On-policy: collects a rollout of N transitions, then updates from them.
-    The Q-table or replay buffer in earlier agents is replaced by a rolling
-    rollout buffer that is consumed and discarded each update cycle.
-  * Learns a policy directly (a softmax over the 15 discrete actions) rather
-    than estimating Q-values and acting greedily.
-  * Uses a separate critic head to estimate state values for advantage
-    computation (Generalised Advantage Estimation, GAE).
-  * Exploration is built into the policy itself (categorical sampling); we
-    do NOT use epsilon-greedy. Calvano's exp(-beta*t) schedule does not apply.
-
-The Agent interface is identical to QLearningAgent and DQNAgent: act(state),
-observe(state, action, reward, next_state). Internally the agent buffers
-transitions and performs a PPO update every `rollout_size` observations.
-"""
+"""PPO agent for the Calvano Bertrand environment."""
 
 from __future__ import annotations
 
@@ -30,14 +13,7 @@ import torch.nn.functional as F
 from .base import Agent
 
 
-# --------------------------------------------------------------------------- #
-# Actor-critic network                                                        #
-# --------------------------------------------------------------------------- #
-
-
 class ActorCritic(nn.Module):
-    """Shared trunk -> separate actor (logits) and critic (value) heads."""
-
     def __init__(self, n_states: int, n_actions: int, hidden: int = 64):
         super().__init__()
         self.n_states = n_states
@@ -57,11 +33,6 @@ class ActorCritic(nn.Module):
         return logits, value
 
 
-# --------------------------------------------------------------------------- #
-# Rollout buffer                                                              #
-# --------------------------------------------------------------------------- #
-
-
 @dataclass
 class Rollout:
     states: list[int]
@@ -76,11 +47,6 @@ def empty_rollout() -> Rollout:
     return Rollout([], [], [], [], [], [])
 
 
-# --------------------------------------------------------------------------- #
-# Agent                                                                       #
-# --------------------------------------------------------------------------- #
-
-
 class PPOAgent(Agent):
     name = "PPO"
 
@@ -88,11 +54,11 @@ class PPOAgent(Agent):
         self,
         n_states: int,
         n_actions: int,
-        delta: float = 0.95,           # discount factor
+        delta: float = 0.95,
         lr: float = 3e-4,
         hidden: int = 64,
-        rollout_size: int = 2048,      # transitions per update
-        n_epochs: int = 4,             # PPO epochs per update
+        rollout_size: int = 2048,
+        n_epochs: int = 4,
         minibatch_size: int = 256,
         clip_eps: float = 0.2,
         gae_lambda: float = 0.95,
@@ -125,30 +91,25 @@ class PPOAgent(Agent):
         self.rollout = empty_rollout()
         self._eye = torch.eye(n_states, device=self.device)
 
-    # ----- helpers -----
     def _state_tensor(self, state: int) -> torch.Tensor:
         return self._eye[state].unsqueeze(0)
 
-    # ----- Agent interface -----
     def act(self, state: int) -> int:
         with torch.no_grad():
             logits, value = self.net(self._state_tensor(state))
             dist = torch.distributions.Categorical(logits=logits)
             action = dist.sample()
             log_prob = dist.log_prob(action)
-        # cache the on-policy log-prob and value for the upcoming observe()
         self._last_log_prob = float(log_prob.item())
         self._last_value = float(value.item())
         return int(action.item())
 
     def greedy_action(self, state: int) -> int:
-        """Deterministic argmax over the policy logits — used for evaluation."""
         with torch.no_grad():
             logits, _ = self.net(self._state_tensor(state))
         return int(logits.argmax(dim=-1).item())
 
     def observe(self, state: int, action: int, reward: float, next_state: int) -> None:
-        # Append the transition. The log-prob and value were captured in act().
         self.rollout.states.append(state)
         self.rollout.actions.append(action)
         self.rollout.rewards.append(reward)
@@ -162,12 +123,10 @@ class PPOAgent(Agent):
             self.rollout = empty_rollout()
 
     def end_episode(self) -> None:
-        # Flush partial rollout if it's substantial
         if len(self.rollout.states) >= self.minibatch_size:
             self._update()
         self.rollout = empty_rollout()
 
-    # ----- PPO update -----
     def _update(self) -> None:
         states = np.array(self.rollout.states, dtype=np.int64)
         actions = np.array(self.rollout.actions, dtype=np.int64)
@@ -178,12 +137,10 @@ class PPOAgent(Agent):
 
         T = len(states)
 
-        # bootstrap value of the final next-state
         with torch.no_grad():
             _, last_value = self.net(self._eye[next_states[-1]].unsqueeze(0))
             last_value = float(last_value.item())
 
-        # GAE
         advantages = np.zeros(T, dtype=np.float32)
         gae = 0.0
         for i in reversed(range(T)):
@@ -193,19 +150,16 @@ class PPOAgent(Agent):
             advantages[i] = gae
         returns = advantages + values
 
-        # normalise advantages
         adv_mean = advantages.mean()
         adv_std = advantages.std() + 1e-8
         advantages = (advantages - adv_mean) / adv_std
 
-        # to torch
         s_t = self._eye[torch.as_tensor(states, device=self.device)]
         a_t = torch.as_tensor(actions, device=self.device, dtype=torch.long)
         old_lp_t = torch.as_tensor(old_log_probs, device=self.device, dtype=torch.float32)
         adv_t = torch.as_tensor(advantages, device=self.device, dtype=torch.float32)
         ret_t = torch.as_tensor(returns, device=self.device, dtype=torch.float32)
 
-        # K epochs over minibatches
         idx = np.arange(T)
         for _ in range(self.n_epochs):
             self.rng.shuffle(idx)
