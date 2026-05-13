@@ -1,14 +1,4 @@
-"""
-Tabular Q-learning with epsilon-greedy exploration (Calvano et al. 2020).
-
-Update rule (eq. 4 in the paper):
-    Q(s, a) <- (1 - alpha) Q(s, a) + alpha [r + delta max_a' Q(s', a')]
-
-Exploration: epsilon_t = exp(-beta * t), where t counts only this agent's steps.
-
-Initialization: Q_0 set to the discounted expected reward when the rival
-randomizes uniformly (eq. 8). The user supplies this matrix at construction.
-"""
+"""Tabular Q-learning agent."""
 
 import numpy as np
 
@@ -41,7 +31,7 @@ class QLearningAgent(Agent):
         else:
             self.Q = np.zeros((n_states, n_actions), dtype=np.float64)
 
-        self.t = 0  # step counter, drives epsilon decay
+        self.t = 0
 
     @property
     def epsilon(self) -> float:
@@ -62,16 +52,10 @@ class QLearningAgent(Agent):
 
 
 def calvano_q_init(env, delta: float = 0.95) -> np.ndarray:
-    """Initialise Q_0 to the discounted profit when the rival randomises uniformly (eq. 8).
-
-    For a symmetric duopoly:
-        Q_0(s, a_i) = (1 / (1 - delta)) * E_{a_j ~ Uniform}[ pi_i(a_i, a_j) ]
-    """
     n_states = env.n_states
     n_actions = env.m
     Q0 = np.zeros((n_states, n_actions), dtype=np.float64)
 
-    # average profit when own action is a and rival is uniform
     avg = np.zeros(n_actions)
     for a_i in range(n_actions):
         total = 0.0
