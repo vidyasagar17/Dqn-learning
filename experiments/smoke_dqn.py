@@ -1,9 +1,3 @@
-"""
-Fast unit-test smoke for DQN. Verifies the agent's interface and data flow
-work correctly, without trying to actually train to convergence (which takes
-many minutes of CPU time).
-"""
-
 import time
 import numpy as np
 
