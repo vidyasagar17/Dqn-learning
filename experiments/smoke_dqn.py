@@ -2,9 +2,6 @@
 Fast unit-test smoke for DQN. Verifies the agent's interface and data flow
 work correctly, without trying to actually train to convergence (which takes
 many minutes of CPU time).
-
-Run a real training session on your own machine — Calvano-style runs need
-50k-200k steps per session, which is ~10-30 minutes per session on a laptop CPU.
 """
 
 import time
