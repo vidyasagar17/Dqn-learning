@@ -1,9 +1,3 @@
-"""
-Smoke test: tiny Q-vs-Q session. Uses high beta (fast convergence) to verify the
-plumbing works. NOT a baseline reproduction — Delta will be lower than 0.85
-because exploration is too curtailed. The point is to confirm everything runs.
-"""
-
 import numpy as np
 
 from agents.q_learning import QLearningAgent, calvano_q_init
