@@ -1,20 +1,9 @@
-"""
-Profit asymmetry analysis (Stage 3.4 measurement iii).
-
-For each pairing, computes how unevenly profits are split between the two
-agents. Symmetric pairings (Q-Q, DQN-DQN, PPO-PPO) should be roughly even
-on average. Heterogeneous pairings might show systematic asymmetry: one
-algorithm consistently earning more than the other.
-
-Usage:
-    python -m analysis.asymmetry results/*.json
-"""
+"""Profit asymmetry across pairings."""
 
 from __future__ import annotations
 
 import argparse
 import json
-from pathlib import Path
 
 import numpy as np
 
@@ -36,14 +25,11 @@ def main():
         with open(f) as fh:
             d = json.load(fh)
 
-        # final_prices is a list of [p1, p2] per session. compute per-firm
-        # profits at those prices.
         prices = np.array([s["final_prices"] for s in d["sessions"]])
         if prices.size == 0:
             continue
         profits = np.array([env.profits(p) for p in prices])
         mean_p1, mean_p2 = profits[:, 0].mean(), profits[:, 1].mean()
-        # asymmetry = (max - min) / (max + min). 0 = perfectly even, 1 = one firm gets all.
         denom = profits.sum(axis=1) + 1e-12
         asym = np.abs(profits[:, 0] - profits[:, 1]) / denom
         print(f"{d['pairing']:<10} {d['n_sessions']:>4} "
