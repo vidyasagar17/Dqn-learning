@@ -1,26 +1,8 @@
-"""
-Impulse-response analysis (Stage 3.4 measurement iv).
-
-Runs a fresh training session for the requested pairing, then forces a
-one-period deviation from the converged behaviour and plots the price path
-over the next 15 periods. This reproduces Calvano's Figure 4.
-
-A genuine collusion strategy shows a recognisable signature: a sharp drop
-when the deviation happens, a few periods of mutual punishment, then a
-gradual return to the cooperative price. If the signature appears, the
-high prices were really being enforced as a cooperative equilibrium. If
-prices just stay low after the deviation, the agents were not actually
-sustaining cooperation through any threat structure.
-
-Usage:
-    python -m analysis.impulse_response_runner --pairing Q_Q --out impulse_qq.png
-    python -m analysis.impulse_response_runner --pairing Q_DQN --out impulse_qdqn.png
-"""
+"""Impulse-response runner."""
 
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -48,7 +30,6 @@ def main():
     rng = np.random.default_rng(args.seed)
     agents = make_pair(args.pairing, env, rng)
 
-    # train one session
     print(f"Training one {args.pairing} session for impulse-response analysis...")
     budget = session_budget(args.pairing)
     result = run_session(env, agents, **budget,
@@ -56,20 +37,18 @@ def main():
     print(f"  steps={result.n_steps:,}  delta={result.delta_final:.3f}  "
           f"prices={result.final_prices.tolist()}")
 
-    # impulse response
     print("Running impulse response...")
     ir = impulse_response(env, agents, horizon=args.horizon,
                           deviating_agent=args.deviating)
 
-    prices = ir["prices"]      # shape (horizon+1, 2)
+    prices = ir["prices"]
     times = np.arange(args.horizon + 1)
 
-    # plot
     fig, ax = plt.subplots(figsize=(8, 5))
     ax.plot(times, prices[:, args.deviating], "o-", color="#dc2626",
-            label=f"Deviating agent ({['Q', 'DQN', 'PPO'][0]})", linewidth=2)
+            label=f"Deviating agent ({agents[args.deviating].name})", linewidth=2)
     ax.plot(times, prices[:, 1 - args.deviating], "s--", color="#1e40af",
-            label="Non-deviating agent", linewidth=2)
+            label=f"Non-deviating agent ({agents[1 - args.deviating].name})", linewidth=2)
     ax.axhline(env.p_nash, color="grey", linestyle=":", label=f"Bertrand-Nash ({env.p_nash:.3f})")
     ax.axhline(env.p_monopoly, color="green", linestyle=":", label=f"Monopoly ({env.p_monopoly:.3f})")
     ax.set_xlabel("Period after deviation")
