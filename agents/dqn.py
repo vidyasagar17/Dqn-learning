@@ -1,26 +1,4 @@
-"""
-Deep Q-Network agent for the Calvano Bertrand environment.
-
-Differences from tabular Q-learning:
-  * Q-values come from a small MLP, not a lookup table.
-  * Transitions are stored in a replay buffer; we train on minibatches.
-  * A separate target network stabilises the TD target; it tracks the online
-    network with a soft update (tau) every step.
-  * State is fed in as a one-hot vector over the n_states discrete states.
-
-The Agent interface is identical to QLearningAgent so the training loop in
-experiments/run_session.py works without changes.
-
-Notes on hyperparameters
-------------------------
-For the Calvano environment with k=1 memory and m=15 prices we have only
-225 states, so the Q-function is genuinely low-dimensional. A small network
-(2 x 64 hidden) is more than enough — bigger networks just slow learning.
-
-The exploration schedule is exp(-beta * t) to mirror Calvano. We keep beta
-in the same ballpark as the tabular case but DQN converges faster because
-each gradient step propagates information across many states at once.
-"""
+"""DQN agent for the Calvano Bertrand environment."""
 
 from __future__ import annotations
 
@@ -36,9 +14,6 @@ import torch.nn.functional as F
 from .base import Agent
 
 
-
-
-
 @dataclass
 class Transition:
     state: int
@@ -48,8 +23,6 @@ class Transition:
 
 
 class ReplayBuffer:
-    """Fixed-size circular buffer of transitions, sampled uniformly."""
-
     def __init__(self, capacity: int, rng: np.random.Generator):
         self.capacity = capacity
         self.buffer: deque[Transition] = deque(maxlen=capacity)
@@ -66,14 +39,7 @@ class ReplayBuffer:
         return len(self.buffer)
 
 
-# --------------------------------------------------------------------------- #
-# Q-network                                                                   #
-# --------------------------------------------------------------------------- #
-
-
 class QNetwork(nn.Module):
-    """One-hot state -> hidden -> Q-values for each action."""
-
     def __init__(self, n_states: int, n_actions: int, hidden: int = 64):
         super().__init__()
         self.n_states = n_states
@@ -85,11 +51,6 @@ class QNetwork(nn.Module):
         x = F.relu(self.fc1(state_onehot))
         x = F.relu(self.fc2(x))
         return self.head(x)
-
-
-# --------------------------------------------------------------------------- #
-# Agent                                                                       #
-# --------------------------------------------------------------------------- #
 
 
 class DQNAgent(Agent):
@@ -121,11 +82,9 @@ class DQNAgent(Agent):
         self.train_every = train_every
         self.device = torch.device(device)
         self.rng = rng if rng is not None else np.random.default_rng()
-        self.t = 0  # step counter (drives epsilon and warm-up)
+        self.t = 0
 
-        # torch RNG seeded from numpy rng for reproducibility
-        torch_seed = int(self.rng.integers(2**31))
-        torch.manual_seed(torch_seed)
+        torch.manual_seed(int(self.rng.integers(2**31)))
 
         self.online = QNetwork(n_states, n_actions, hidden).to(self.device)
         self.target = QNetwork(n_states, n_actions, hidden).to(self.device)
@@ -137,22 +96,18 @@ class DQNAgent(Agent):
         self.optimizer = torch.optim.Adam(self.online.parameters(), lr=lr)
         self.buffer = ReplayBuffer(buffer_size, self.rng)
 
-        # cache one-hot identity for fast state encoding
         self._eye = torch.eye(n_states, device=self.device)
 
-    # ----- exploration schedule -----
     @property
     def epsilon(self) -> float:
         return float(np.exp(-self.beta * self.t))
 
-    # ----- helpers -----
     def _state_tensor(self, state: int) -> torch.Tensor:
-        return self._eye[state].unsqueeze(0)  # shape (1, n_states)
+        return self._eye[state].unsqueeze(0)
 
     def _states_tensor(self, states: np.ndarray) -> torch.Tensor:
         return self._eye[torch.as_tensor(states, device=self.device)]
 
-    # ----- Agent interface -----
     def act(self, state: int) -> int:
         if self.rng.random() < self.epsilon:
             return int(self.rng.integers(self.n_actions))
@@ -183,10 +138,8 @@ class DQNAgent(Agent):
         a = torch.as_tensor(actions, device=self.device, dtype=torch.long).unsqueeze(1)
         r = torch.as_tensor(rewards, device=self.device, dtype=torch.float32)
 
-        # Q(s, a) under the online network
         q_sa = self.online(s).gather(1, a).squeeze(1)
 
-        # max_a' Q_target(s', a')
         with torch.no_grad():
             q_next_max = self.target(s_next).max(dim=1).values
             target = r + self.delta * q_next_max
@@ -194,7 +147,6 @@ class DQNAgent(Agent):
         loss = F.smooth_l1_loss(q_sa, target)
         self.optimizer.zero_grad()
         loss.backward()
-        # mild gradient clipping — DQN is sensitive in non-stationary 2-agent settings
         nn.utils.clip_grad_norm_(self.online.parameters(), max_norm=10.0)
         self.optimizer.step()
 
