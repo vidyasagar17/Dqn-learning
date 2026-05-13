@@ -1,15 +1,9 @@
-"""
-Make a comparison plot of Delta distributions across pairings.
-
-Usage:
-    python -m analysis.plot_results results/*.json --out delta_comparison.png
-"""
+"""Comparison boxplot of Delta across pairings."""
 
 from __future__ import annotations
 
 import argparse
 import json
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -31,9 +25,9 @@ def main():
     fig, ax = plt.subplots(figsize=(8, 5))
     labels = list(data.keys())
     values = [data[k] for k in labels]
-    bp = ax.boxplot(values, labels=labels, patch_artist=True,
-                    boxprops=dict(facecolor="#e0e7ff"),
-                    medianprops=dict(color="#1e40af", linewidth=2))
+    ax.boxplot(values, labels=labels, patch_artist=True,
+               boxprops=dict(facecolor="#e0e7ff"),
+               medianprops=dict(color="#1e40af", linewidth=2))
 
     ax.axhline(0, color="#dc2626", linestyle="--", alpha=0.5, label="Bertrand-Nash")
     ax.axhline(1, color="#16a34a", linestyle="--", alpha=0.5, label="Monopoly")
